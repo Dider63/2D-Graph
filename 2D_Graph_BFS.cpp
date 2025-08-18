@@ -1,71 +1,76 @@
-#include<iostream>
-#include<vector>
-#include<queue>
+#include <iostream>
+#include <vector>
+#include <queue>
 using namespace std;
-void insertGraph(vector<vector<int>> &V,int source,int destination){
-V[source].push_back(destination);
+
+// Function to add edge to adjacency list
+void addEdge(vector<vector<int>> &adj, int source, int destination) {
+    adj[source].push_back(destination);
+    // If graph is undirected, also add reverse edge:
+    // adj[destination].push_back(source);
 }
-printGraph(vector<vector<int>> &V){
-    int n=V.size();
-for(int i=0;i<n;i++){
-        cout<<i<<"-> ";
-    for(int j : V[i]){
-        cout<<j<<" ";
+
+// Function to print adjacency list
+void printGraph(vector<vector<int>> &adj) {
+    cout << "\nAdjacency List:\n";
+    for (int i = 0; i < adj.size(); i++) {
+        cout << i << " -> ";
+        for (int v : adj[i]) {
+            cout << v << " ";
+        }
+        cout << endl;
     }
-    cout<<endl;
 }
 
-
-}
-
-vector<int> bfs(vector<vector<int>>& adj)  {
+// BFS traversal
+void BFS(vector<vector<int>> &adj, int source) {
     int V = adj.size();
-    int s = 0;
-    vector<int> Queue;
+    vector<bool> visited(V, false);
     queue<int> q;
-    vector<bool> visited(V,false);
 
-    visited[s]=true;
+    visited[source] = true;
+    q.push(source);
 
-    q.push(s);
-    while (!q.empty()){
-        int curr=q.front();
+    cout << "\nBFS Traversal starting from " << source << ": ";
+
+    while (!q.empty()) {
+        int u = q.front();
         q.pop();
-        Queue.push_back(curr);
-        for (int x:adj[curr]) {
-            if (!visited[x]) {
-                visited[x]=true;
-                q.push(x);
+        cout << u << " ";
+
+        for (int v : adj[u]) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.push(v);
             }
         }
     }
-
-    return Queue;
+    cout << endl;
 }
 
+int main() {
+    int V, E;
+    cout << "Enter number of vertices: ";
+    cin >> V;
+    cout << "Enter number of edges: ";
+    cin >> E;
 
-int main(){
+    vector<vector<int>> adj(V);
 
-vector<vector <int>> V(7);
-insertGraph(V,0,1);
-insertGraph(V,0,4);
-insertGraph(V,1,2);
-insertGraph(V,1,6);
-insertGraph(V,2,3);
-insertGraph(V,4,5);
-insertGraph(V,4,6);
-insertGraph(V,5,3);
-insertGraph(V,5,6);
-insertGraph(V,6,3);
-
-printGraph(V);
-
- vector<int> ans = bfs(V);
-    for(auto i:ans) {
-        cout<<i<<" ";
+    cout << "Enter edges (u v):\n";
+    for (int i = 0; i < E; i++) {
+        int u, v;
+        cin >> u >> v;
+        addEdge(adj, u, v);
     }
 
+    printGraph(adj);
 
+    int start;
+    cout << "Enter source vertex for BFS: ";
+    cin >> start;
 
-return 0;
+    BFS(adj, start);
+
+    return 0;
 }
